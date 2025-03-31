@@ -1,0 +1,16 @@
+{
+    "name": "Tab Locker",
+    "version": "1.0",
+    "manifest_version": 3,
+    "description": "Lock tabs with a password",
+    "permissions": ["storage", "scripting", "webNavigation"],
+    "host_permissions": ["*://*/*"],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
+    }
+}
