@@ -3,15 +3,82 @@
 <head>
     <title>Tab Locker Settings</title>
     <style>
-        body { font-family: Arial, sans-serif; width: 250px; padding: 10px; text-align: center; }
-        input, button { width: 100%; margin: 5px 0; padding: 8px; font-size: 14px; }
-        #settings { display: none; }
+        body {
+            font-family: Arial, sans-serif;
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f4f4f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        input, button {
+            width: 90%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        input:focus, button:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        #error-message {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+
+        #settings {
+            display: none;
+        }
+
         .buy-me-a-coffee {
             text-align: center;
             margin-top: 20px;
         }
+
         .buy-me-a-coffee img {
-            width: 150px; /* Adjust size as needed */
+            width: 160px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .buy-me-a-coffee img:hover {
+            transform: scale(1.1);
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media (min-width: 400px) {
+            body {
+                width: 350px;
+            }
+
+            .buy-me-a-coffee img {
+                width: 180px;
+            }
         }
     </style>
 </head>
@@ -19,24 +86,23 @@
 
     <div id="password-prompt">
         <h3>Enter Password 🔑</h3>
-        <input type="password" id="popup-password">
+        <input type="password" id="popup-password" placeholder="Enter your password">
         <button id="verify-password">Unlock</button>
-        <p id="error-message" style="color: red; display: none;">Incorrect password!</p>
+        <p id="error-message">Incorrect password!</p>
     </div>
 
     <div id="settings">
         <h3>Tab Locker Settings</h3>
         
-        <label>New Password:</label>
-        <input type="password" id="new-password">
+        <label for="new-password">New Password:</label>
+        <input type="password" id="new-password" placeholder="Enter new password">
         
-        <label>Locked Sites (comma-separated):</label>
-        <input type="text" id="locked-sites">
+        <label for="locked-sites">Locked Sites (comma-separated):</label>
+        <input type="text" id="locked-sites" placeholder="e.g., example.com, test.com">
         
         <button id="save-settings">Save</button>
     </div>
 
-    <!-- Buy Me A Coffee Button -->
     <div class="buy-me-a-coffee">
         <a href="https://buymeacoffee.com/isshiki" target="_blank">
             <img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me a Coffee" />
