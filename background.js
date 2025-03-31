@@ -14,7 +14,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     }
 });
 
-
 chrome.webNavigation.onCompleted.addListener(details => {
     if (details.url === "chrome://extensions/") {
         chrome.storage.sync.get(["password"], (data) => {
@@ -36,4 +35,3 @@ function requestPassword(correctPassword) {
         window.close();
     }
 }
-
