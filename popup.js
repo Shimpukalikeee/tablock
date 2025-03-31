@@ -1,61 +1,68 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let passwordPrompt = document.getElementById("password-prompt");
-    let settingsDiv = document.getElementById("settings");
-    let errorMessage = document.getElementById("error-message");
-
-    chrome.storage.sync.get(["password"], (data) => {
-        let savedPassword = data.password || "1234";
-
-        document.getElementById("verify-password").addEventListener("click", () => {
-            let enteredPassword = document.getElementById("popup-password").value;
-
-            if (enteredPassword === savedPassword) {
-                passwordPrompt.style.display = "none";
-                settingsDiv.style.display = "block";
-            } else {
-                errorMessage.style.display = "block";
-                document.getElementById("popup-password").value = "";
-            }
-        });
+    chrome.storage.sync.get(["password", "masterKey", "lockedSites"], (data) => {
+        document.getElementById("new-password").value = data.password || "";
+        document.getElementById("locked-sites").value = (data.lockedSites || ["facebook.com"]).join(", ");
+        document.getElementById("new-master-key").value = data.masterKey || "";
     });
 
-    document.getElementById("save-settings").addEventListener("click", () => {
-        let newPassword = document.getElementById("new-password").value;
-        let newLockedSites = document.getElementById("locked-sites").value.split(",").map(site => site.trim());
+    document.getElementById("verify-password").addEventListener("click", () => {
+        verifyPassword();
+    });
 
-        chrome.storage.sync.get(["password", "lockedSites"], (data) => {
-            let oldPassword = data.password || "1234";
-            let oldLockedSites = data.lockedSites || [];
+    document.getElementById("popup-password").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            verifyPassword();
+        }
+    });
 
-            chrome.storage.sync.set({ password: newPassword, lockedSites: newLockedSites }, () => {
-                alert("Settings saved!");
+    function verifyPassword() {
+        const enteredPassword = document.getElementById("popup-password").value;
 
-
-                if (newPassword !== oldPassword) {
-                    chrome.tabs.query({}, function (tabs) {
-                        for (let tab of tabs) {
-                            chrome.tabs.reload(tab.id);
-                        }
-                    });
-                } else {
-   
-                    let addedSites = newLockedSites.filter(site => !oldLockedSites.includes(site));
-
-                    chrome.tabs.query({}, function (tabs) {
-                        tabs.forEach(tab => {
-                            if (addedSites.some(site => tab.url.includes(site))) {
+        chrome.storage.sync.get(["password", "masterKey", "lockedSites"], (data) => {
+            if (enteredPassword === data.password || enteredPassword === data.masterKey) {
+                chrome.tabs.query({}, (tabs) => {
+                    tabs.forEach((tab) => {
+                        data.lockedSites.forEach((site) => {
+                            if (tab.url.includes(site)) {
                                 chrome.tabs.reload(tab.id);
                             }
                         });
                     });
-                }
-            });
-        });
-    });
+                });
+                document.getElementById("password-prompt").style.display = "none";
+                document.getElementById("settings").style.display = "block";
 
-    chrome.storage.sync.get(["password", "lockedSites"], (data) => {
-        document.getElementById("new-password").value = data.password || "";
-        document.getElementById("locked-sites").value = (data.lockedSites || ["facebook.com"]).join(", ");
+                const successMessage = document.createElement('div');
+                successMessage.classList.add('alert', 'alert-success', 'mt-3');
+                successMessage.textContent = 'Login successfully!';
+                
+                document.getElementById("settings").appendChild(successMessage);
+
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            } else {
+                document.getElementById("error-message").style.display = "block";
+            }
+        });
+    }
+
+    document.getElementById("save-settings").addEventListener("click", () => {
+        const newPassword = document.getElementById("new-password").value;
+        const newMasterKey = document.getElementById("new-master-key").value;
+        const lockedSites = document.getElementById("locked-sites").value.split(",").map(site => site.trim());
+
+        chrome.storage.sync.set({ password: newPassword, masterKey: newMasterKey, lockedSites: lockedSites }, () => {
+            const settingsSuccessMessage = document.createElement('div');
+            settingsSuccessMessage.classList.add('alert', 'alert-success', 'mt-3');
+            settingsSuccessMessage.textContent = 'Settings saved successfully!';
+
+            document.getElementById("settings").appendChild(settingsSuccessMessage);
+
+            setTimeout(() => {
+                settingsSuccessMessage.style.display = 'none';
+            }, 3000);
+        });
     });
 
     let creditsDiv = document.createElement("div");
