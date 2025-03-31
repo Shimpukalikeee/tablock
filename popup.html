@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Tab Locker Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +19,7 @@
             margin-bottom: 10px;
         }
 
-        input, button {
+        input, button, label {
             width: 90%;
             margin: 10px 0;
             padding: 10px;
@@ -26,6 +27,15 @@
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
+            display: block;
+            text-align: left;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 10px;
         }
 
         input:focus, button:focus {
@@ -41,6 +51,12 @@
         }
 
         #settings {
+            display: none;
+        }
+
+        #success-message {
+            color: green;
+            font-size: 14px;
             display: none;
         }
 
@@ -85,7 +101,7 @@
 <body>
 
     <div id="password-prompt">
-        <h3>Enter Password 🔑</h3>
+        <h3>Enter Password</h3>
         <input type="password" id="popup-password" placeholder="Enter your password">
         <button id="verify-password">Unlock</button>
         <p id="error-message">Incorrect password!</p>
@@ -94,13 +110,23 @@
     <div id="settings">
         <h3>Tab Locker Settings</h3>
         
-        <label for="new-password">New Password:</label>
-        <input type="password" id="new-password" placeholder="Enter new password">
-        
-        <label for="locked-sites">Locked Sites (comma-separated):</label>
-        <input type="text" id="locked-sites" placeholder="e.g., example.com, test.com">
+        <div>
+            <label for="new-password">New Password:</label>
+            <input type="password" id="new-password" placeholder="Enter new password">
+        </div>
+
+        <div>
+            <label for="locked-sites">Locked Sites (comma-separated):</label>
+            <input type="text" id="locked-sites" placeholder="e.g., example.com, test.com">
+        </div>
+
+        <div>
+            <label for="new-master-key">New Master Key:</label>
+            <input type="text" id="new-master-key" placeholder="Enter new master key">
+        </div>
         
         <button id="save-settings">Save</button>
+        <p id="success-message">Settings saved successfully!</p>
     </div>
 
     <div class="buy-me-a-coffee">
@@ -108,7 +134,16 @@
             <img src="https://cdn.buymeacoffee.com/buttons/default-yellow.png" alt="Buy Me a Coffee" />
         </a>
     </div>
-
     <script src="popup.js"></script>
+    <script>
+        document.getElementById('save-settings').addEventListener('click', function() {
+            document.getElementById('success-message').style.display = 'block';
+            
+            setTimeout(function() {
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+
 </body>
 </html>
